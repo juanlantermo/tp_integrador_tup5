@@ -18,10 +18,10 @@ li {
 .container {
   display: flex;
   justify-content: space-around;
-  width: calc(100% - 40px); /* Ajusta el ancho para dejar espacio a ambos lados */
+  width: calc(100% - 40px);
   height: 180px;
   padding: 2rem;
-  margin: 0 20px; /* Espacio en los márgenes izquierdo y derecho */
+  margin: 0 20px; 
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
