@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home - Cotizaciones</title>
     <link rel="stylesheet" href="./css/styles.css" />
+    <script src="./js/script.js" defer></script>
   </head>
   <body>
     <header>
@@ -17,20 +18,29 @@
       </nav>
     </header>
     <main>
-      <section class="cotizaciones">
-        <div class="card">
-          <h2>Dólar Oficial</h2>
-          <p>$350.00</p>
-        </div>
-        <div class="card">
-          <h2>Dólar Blue</h2>
-          <p>$720.00</p>
-        </div>
-        <div class="card">
-          <h2>Euro</h2>
-          <p>$380.00</p>
-        </div>
-      </section>
+        <section class="cotizaciones">
+          <div class="card dolar-oficial">
+            <h2 class="moneda">Dólar Oficial</h2>
+            <div class="compra-venta">
+            <p class="precio-compra">Compra 350.00</p>
+            <p class="precio-venta">Venta 350.00</p>
+            </div>
+          </div>
+          <div class="card dolar-blue">
+            <h2 class="moneda">Dólar Blue</h2>
+            <div class="compra-venta">
+            <p class="precio-compra">Compra 720.00</p>
+            <p class="precio-venta">Venta 720.00</p>
+            </div>
+          </div>
+          <div class="card euro">
+            <h2 class="moneda">Euro</h2>
+            <div class="compra-venta">
+            <p class="precio-compra">Compra 380.00</p>
+            <p class="precio-venta">Venta 380.00</p>
+            </div>
+          </div>
+        </section>
     </main>
     <footer>
       <p>&copy; 2024 Cotizaciones. Borda - Gomez - Lantermo</p>
