@@ -1,11 +1,53 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>historico</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Histórico de Cotizaciones</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Histórico de Cotizaciones</h1>
+      <nav>
+        <ul>
+          <li><a href="./home.html">Home</a></li>
+          <li><a href="#">Histórico</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section class="historico">
+        <form class="fecha-form">
+          <label for="fecha-inicio">Fecha Inicio:</label>
+          <input type="date" id="fecha-inicio" name="fecha-inicio" />
+          <label for="fecha-fin">Fecha Fin:</label>
+          <input type="date" id="fecha-fin" name="fecha-fin" />
+          <button type="submit">Buscar</button>
+        </form>
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Dólar Oficial</th>
+              <th>Dólar Blue</th>
+              <th>Euro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Aquí se pueden agregar filas dinámicamente con JavaScript o el backend -->
+            <tr>
+              <td>2024-08-21</td>
+              <td>$350.00</td>
+              <td>$720.00</td>
+              <td>$380.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2024 Cotizaciones. Borda - Gomez - Lantermo</p>
+    </footer>
+  </body>
 </html>
