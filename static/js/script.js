@@ -1,4 +1,4 @@
-fetch("https://dolarapi.com/v1/cotizaciones")
+fetch("/api/cotizaciones")
   .then(response => response.json())
   .then(data => {
     data.forEach(cotizacion => {
@@ -20,23 +20,4 @@ function actualizarCotizacion(selector, compra, venta) {
     card.querySelector(".precio-venta").textContent = `Venta ${venta}`;
   }
 }
-
-
-
-
-  /*
-  fetch("https://dolarapi.com/v1/dolares")
-  .then(response => response.json())
-  .then(data => {
-    data.forEach(cotizacion => {
-     if (cotizacion.moneda === "USD" && cotizacion.casa === "blue"  && cotizacion.nombre === "Blue"
-
-      ) {
-        // Aseguramos que el valor de "casa" sea "blue" en minúsculas
-        actualizarCotizacion(".dolar-blue", cotizacion.venta);
-      }
-    });
-  })
-  .catch(error => console.error('Error fetching data:', error)); */
-
 
