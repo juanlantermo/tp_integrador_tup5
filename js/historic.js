@@ -1,61 +1,24 @@
 fetch('http://127.0.0.1:5000/historico')
   .then((response) => response.json())
   .then((data) => {
-    fetch('http://127.0.0.1:5000/historico')
-      .then((response) => response.json())
-      .then((data) => {
-        const currentMonth = new Date().getMonth();
-        const currentYear = new Date().getFullYear();
-
-        const casas = ['oficial', 'blue', 'bolsa', 'cripto'];
-
-        casas.forEach((casa) => {
-          const currentMonthData = data.filter((item) => {
-            const itemDate = new Date(item.fecha);
-            return itemDate.getMonth() === currentMonth && itemDate.getFullYear() === currentYear && item.casa === casa;
-          });
-
-          if (currentMonthData.length > 0) {
-            const bestCompraItem = currentMonthData.reduce((prev, curr) => (curr.compra < prev.compra ? curr : prev));
-            const worstCompraItem = currentMonthData.reduce((prev, curr) => (curr.compra > prev.compra ? curr : prev));
-            const bestVentaItem = currentMonthData.reduce((prev, curr) => (curr.venta > prev.venta ? curr : prev));
-            const worstVentaItem = currentMonthData.reduce((prev, curr) => (curr.venta < prev.venta ? curr : prev));
-
-            document.querySelector(`.grid-${casa}-may-cot-1 .date`).textContent = formatDate(bestCompraItem.fecha);
-            document.querySelector(`.grid-${casa}-may-cot-1 .precio`).textContent = `$${bestCompraItem.compra}`;
-
-            document.querySelector(`.grid-${casa}-may-cot-2 .date`).textContent = formatDate(worstCompraItem.fecha);
-            document.querySelector(`.grid-${casa}-may-cot-2 .precio`).textContent = `$${worstCompraItem.compra}`;
-
-            document.querySelector(`.grid-${casa}-may-pro .date`).textContent = formatDate(bestVentaItem.fecha);
-            document.querySelector(`.grid-${casa}-may-pro .precio`).textContent = `$${bestVentaItem.venta}`;
-
-            document.querySelector(`.grid-${casa}-p-pro .date`).textContent = formatDate(worstVentaItem.fecha);
-            document.querySelector(`.grid-${casa}-p-pro .precio`).textContent = `$${worstVentaItem.venta}`;
-          }
-        });
-        function formatDate(dateString) {
-          const date = new Date(dateString);
-          const options = { weekday: 'short', day: 'numeric', month: 'long' };
-          return date.toLocaleDateString('es-ES', options);
-        }
-      })
-      .catch((error) => console.error('Error al obtener los datos:', error));
-
-    const casas = ['oficial', 'blue', 'bolsa', 'cripto'];
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
 
+    const casas = ['oficial', 'blue', 'bolsa'];
+
+    /*Obtenemos datos para tablas */
     casas.forEach((casa) => {
       const filteredData = data.filter((item) => {
         const itemDate = new Date(item.fecha);
-        return item.casa === casa && itemDate.getMonth() === currentMonth && itemDate.getFullYear() === currentYear; 
+        return item.casa === casa && itemDate.getMonth() === currentMonth && itemDate.getFullYear() === currentYear;
       });
 
+      /* Arrays para almacenar los datos del gráfico */
       const xValues = [];
       const compraValues = [];
       const ventaValues = [];
 
+      /* Llenamos arrays previos */
       filteredData.forEach((item) => {
         xValues.push(new Date(item.fecha).toLocaleDateString());
         compraValues.push(item.compra);
@@ -65,6 +28,7 @@ fetch('http://127.0.0.1:5000/historico')
       createChart(casa, xValues, compraValues, ventaValues);
     });
 
+    // Funcion para crear grafico
     function createChart(casa, labels, compraData, ventaData) {
       const chartId = `chart-${casa}`;
       new Chart(chartId, {

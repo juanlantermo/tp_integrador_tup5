@@ -27,7 +27,7 @@ fetch('http://127.0.0.1:5000/dolares')
 const form = document.getElementById('contacto');
 
 form.addEventListener('submit', async function (event) {
-  event.preventDefault();
+  event.preventDefault(); // evito envio por defecto
 
   const nombre = document.getElementById('name').value;
   const email = document.getElementById('email').value;

@@ -1,7 +1,4 @@
 let fecha = document.getElementById("fecha");
-let valorCompraDolarOficial = document.getElementById("compra-oficial");
-let valorVentaDolarOficial = document.getElementById("venta-oficial");
-let respuesta;
 
 fetch('http://127.0.0.1:5000/dolares')
   .then((response) => response.json())

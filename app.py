@@ -1,10 +1,10 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-import requests
+import requests # peticiones a otras apis
 import json
 
 app = Flask(__name__)
-CORS(app)
+CORS(app) # Habilita CORS en toda la aplicación
 
 # Simulamos la base de datos en memoria
 correos = []
@@ -24,8 +24,6 @@ class Dolar:
             "fechaActualizacion": self.fechaActualizacion,
         }
 
-dolar_api = 'https://dolarapi.com/v1/'
-argentina_datos = 'https://api.argentinadatos.com/v1/cotizaciones/dolares/'
 
 @app.route('/')
 def index():
@@ -47,7 +45,7 @@ def test():
 @app.route('/dolares', methods=['GET'])
 def get_dolares():
     try:
-        response = requests.get(f'{dolar_api}dolares')
+        response = requests.get('https://dolarapi.com/v1/dolares')
         response.raise_for_status()
         data = response.json()
         dolares = [Dolar(d["nombre"], d["compra"], d["venta"], d["fechaActualizacion"]) for d in data[:3]]
@@ -58,7 +56,7 @@ def get_dolares():
 @app.route('/cotizaciones', methods=['GET'])
 def get_cotizaciones():
     try:
-        response = requests.get(f'{dolar_api}cotizaciones')
+        response = requests.get('https://dolarapi.com/v1/cotizaciones')
         response.raise_for_status()
         data = response.json()
         dolares = [Dolar(d["nombre"], d["compra"], d["venta"], d["fechaActualizacion"]) for d in data]
@@ -69,7 +67,7 @@ def get_cotizaciones():
 @app.route('/historico', methods=['GET'])
 def get_historico():
     try:
-        response = requests.get(f'{argentina_datos}')
+        response = requests.get('https://api.argentinadatos.com/v1/cotizaciones/dolares/')
         response.raise_for_status()
         data = response.json()
         return jsonify(data)
