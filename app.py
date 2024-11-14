@@ -1,132 +1,135 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 import requests
-import sqlite3
+import json
 
 app = Flask(__name__)
-DATABASE = 'database.db'
+CORS(app)
 
-def connect_db():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row  
-    return conn
+# Simulamos la base de datos en memoria
+correos = []
 
-def init_db():
-    with connect_db() as conn:
-        conn.execute('''
-        CREATE TABLE IF NOT EXISTS cotizaciones (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            moneda TEXT NOT NULL,
-            compra REAL NOT NULL,
-            venta REAL NOT NULL
-        )
-    ''')
-    conn.commit()
+class Dolar:
+    def __init__(self, nombre, compra, venta, fechaActualizacion):
+        self.nombre = nombre
+        self.compra = compra
+        self.venta = venta
+        self.fechaActualizacion = fechaActualizacion
 
-@app.errorhandler(Exception)
-def handle_exception(e):
-    code = 500
-    if isinstance(e, sqlite3.IntegrityError):
-        code = 400
-        message = str(e)
-    elif isinstance(e, sqlite3.OperationalError):
-        code = 500
-        message = "Database operation failed"
-    elif isinstance(e, sqlite3.DatabaseError):
-        code = 500
-        message = "Database error ocurred"
-    else:
-        code = getattr(e, 'code', 500)
-        message = str(e)
-    return jsonify({"error": message}), code
+    def to_dict(self):
+        return {
+            "nombre": self.nombre,
+            "compra": self.compra,
+            "venta": self.venta,
+            "fechaActualizacion": self.fechaActualizacion,
+        }
+
+dolar_api = 'https://dolarapi.com/v1/'
+argentina_datos = 'https://api.argentinadatos.com/v1/cotizaciones/dolares/'
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    endpoints = [
+        {"path": "/", "descripcion": "Pagina de inicio (GET)"},
+        {"path": "/test", "descripcion": "Endpoint de prueba (GET)"},
+        {"path": "/dolares", "descripcion": "Obtiene el tipo de cambio de diferentes dolares (GET)"},
+        {"path": "/cotizaciones", "descripcion": "Obtiene las cotizaciones actuales (GET)"},
+        {"path": "/historico", "descripcion": "Obtiene datos historicos de cotizaciones (GET)"},
+        {"path": "/enviar-email", "descripcion": "Envia un correo electronico (POST)"},
+        {"path": "/historial-emails", "descripcion": "Obtiene el historial de correos enviados (GET)"}
+    ]
+    return jsonify(endpoints), 200
 
-
-@app.route('/api/cotizaciones', methods=['GET'])
-def obtener_cotizaciones():
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM cotizaciones;')
-    cotizaciones = cursor.fetchall()
-    cursor.close()
-    conn.close()
-
-    return jsonify([dict(row) for row in cotizaciones])
-
-
-@app.route('/api/cotizaciones/<int:id>', methods=['GET'])
-def obtener_cotizacion(id):
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM cotizaciones WHERE id = ?;', (id,))
-    cotizacion = cursor.fetchone()
-    cursor.close()
-    conn.close()
-
-    if cotizacion:
-        return jsonify(dict(cotizacion))
-    else:
-        return jsonify({'error': 'Cotización no encontrada'}), 404
-
-
-@app.route('/api/cotizaciones', methods=['POST'])
-def crear_cotizacion():
-    nueva_cotizacion = request.json
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute(
-        'INSERT INTO cotizaciones (moneda, compra, venta) VALUES (?, ?, ?);',
-        (nueva_cotizacion['moneda'], nueva_cotizacion['compra'], nueva_cotizacion['venta'])
-    )
-    conn.commit()
-    nueva_id = cursor.lastrowid
-    cursor.close()
-    conn.close()
-
-    return jsonify({'id': nueva_id}), 201
-
-
-@app.route('/api/cotizaciones/<int:id>', methods=['PUT'])
-def actualizar_cotizacion(id):
-    datos_actualizados = request.json
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute(
-        'UPDATE cotizaciones SET moneda = ?, compra = ?, venta = ? WHERE id = ?;',
-        (datos_actualizados['moneda'], datos_actualizados['compra'], datos_actualizados['venta'], id)
-    )
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    return jsonify({'mensaje': 'Cotización actualizada'})
-
-
-@app.route('/api/cotizaciones/<int:id>', methods=['DELETE'])
-def eliminar_cotizacion(id):
-    conn = connect_db()
-    cursor = conn.cursor()
-    cursor.execute('DELETE FROM cotizaciones WHERE id = ?;', (id,))
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    return jsonify({'mensaje': 'Cotización eliminada'})
-
-
-@app.route('/api/cotizaciones')
-def cotizaciones():
-    # Obtén los datos desde una API externa de cotizaciones
+@app.route('/test', methods=['GET'])
+def test():
+    return jsonify({"message": "Flask is working!"})
+# Metodo get para consumo formulario.js y envio de mail
+@app.route('/dolares', methods=['GET'])
+def get_dolares():
     try:
-        response = requests.get("https://dolarapi.com/v1/cotizaciones")
+        response = requests.get(f'{dolar_api}dolares')
+        response.raise_for_status()
+        data = response.json()
+        dolares = [Dolar(d["nombre"], d["compra"], d["venta"], d["fechaActualizacion"]) for d in data[:3]]
+        return jsonify([dolar.to_dict() for dolar in dolares])
+    except requests.RequestException:
+        return jsonify({"error": "Error al obtener los datos de la API"}), 500
+# Metodo get para inf en index monedas diferentes a dolar
+@app.route('/cotizaciones', methods=['GET'])
+def get_cotizaciones():
+    try:
+        response = requests.get(f'{dolar_api}cotizaciones')
+        response.raise_for_status()
+        data = response.json()
+        dolares = [Dolar(d["nombre"], d["compra"], d["venta"], d["fechaActualizacion"]) for d in data]
+        return jsonify([dolar.to_dict() for dolar in dolares])
+    except requests.RequestException:
+        return jsonify({"error": "Error al obtener los datos de la API"}), 500
+
+@app.route('/historico', methods=['GET'])
+def get_historico():
+    try:
+        response = requests.get(f'{argentina_datos}')
         response.raise_for_status()
         data = response.json()
         return jsonify(data)
-    except requests.exceptions.RequestException as e:
-        print(f"Error al obtener datos: {e}")
-        return jsonify({"error": "No se pudo obtener los datos"}), 500
+    except requests.RequestException:
+        return jsonify({"error": "Error al obtener los datos de la API"}), 500
 
-if __name__ == '__main__':
+@app.route('/enviar-email', methods=['POST'])
+def send_email():
+    data = request.get_json()
+    name = data.get('name')
+    email = data.get('email')
+    message = data.get('message')
+    cotizaciones = data.get('cotizaciones')
+
+    emailjs_data = {
+        "service_id": "service_d9qjdcq",
+        "template_id": "template_vcqc54e",
+        "user_id": "CSPgr1k1ok22ThUHB",
+        "accessToken": "SZ_k-5uJF8SqHcteH39nL",
+        "template_params": {
+            "from_name": name,
+            "message": message,
+            "cotizaciones": cotizaciones,
+            "to_mail": email
+        }
+    }
+
+    headers = {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Origin': 'https://your-website.com',
+        'Referer': 'https://your-website.com/'
+    }
+
+    try:
+        response = requests.post(
+            'https://api.emailjs.com/api/v1.0/email/send',
+            data=json.dumps(emailjs_data),
+            headers=headers
+        )
+
+        if response.status_code == 200:
+            # Guardamos el correo en la lista en memoria
+            correos.append({
+                "nombre": name,
+                "email": email,
+                "mensaje": message,
+                "cotizaciones": cotizaciones
+            })
+            return jsonify({"message": "Correo enviado exitosamente"}), 200
+        else:
+            return jsonify({"message": "Error al enviar el correo"}), response.status_code
+    except requests.exceptions.RequestException as error:
+        return jsonify({"message": "Error en la solicitud a EmailJS", "error": str(error)}), 500
+
+@app.route('/historial-emails', methods=['GET'])
+def historial_emails():
+    return jsonify(correos), 200
+
+if __name__ == "__main__":
     app.run(debug=True)

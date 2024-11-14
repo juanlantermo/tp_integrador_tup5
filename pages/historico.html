@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <title>Histórico</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+</head>
+
+<body>
+    <header class="contenedor">
+        <nav>
+            <ul class="menu">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="./historico.html">Histórico</a></li>
+                <li><a href="./contacto.html">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="contenedor">
+            <h1 class="historico">HISTORICO MENSUAL</h1>
+        </div>
+        <section class="historicos">
+            <h2>DOLAR OFICIAL</h2>
+            <div class="historicos-grafico">
+                <canvas id="chart-oficial" class="grafico"></canvas>
+            </div>
+        </section>
+
+        <section class="historicos">
+            <h2>DOLAR BLUE</h2>
+            <div class="historicos-grafico">
+                <canvas id="chart-blue" class="grafico"></canvas>
+            </div>
+        </section>
+
+        <section class="historicos">
+            <h2>DOLAR BOLSA</h2>
+            <div class="historicos-grafico">
+                <canvas id="chart-bolsa" class="grafico"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <footer class="contenedor-full pie-pagina">
+        <div class="integrantes-utn">
+            <div class="integrantes">
+                <ul class="lista-integrantes">
+                    <li><a href="https://github.com/juanlantermo" target="_blank" title="ir al GitHub">Juan Manuel Lantermo</a></li>
+                    <li><a href="https://github.com/mattigomez" target="_blank" title="ir al GitHub">Matías Gomez</a></li>
+                </ul>
+            </div>
+            <div class="pie-informacion">
+              <img src="../images/utn-logo.png" class="utn-logo" alt="utn-logo">
+              <p>Universidad Tecnológica Nacional</p>
+            </div>
+        </div>
+        <div class="recursos">
+            <p>&copy; 2024 Cotizaciones: <a href="https://dolarapi.com/docs/argentina/" target="_blank" title="Ir a web">dolarapi.com/docs/argentina/</a></p>
+        </div>
+    </footer>
+    <script src="../js/historic.js"></script>
+    <script src="https://kit.fontawesome.com/c28b568b4f.js" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <title>Contacto</title>
+</head>
+
+<body> 
+    <header class="contenedor">
+        <nav>
+            <ul class="menu">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="./historico.html">Histórico</a></li>
+                <li><a href="./contacto.html">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="contenedor-formulario">
+            <form id="contacto">
+                <h1 class="contacto-titulo">CONTACTO</h1>
+                <div class="form-item">
+                    <label for="name">Nombre:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-item">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-item">
+                    <label for="message">Escribe su consulta y reciba cotizaciones:</label>
+                    <textarea id="message" rows="5" required></textarea>
+                </div>
+                <div class="form-item" id="cotizaciones">
+                </div>
+                <div class="form-item btns">
+                    <button type="submit">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="contenedor-full pie-pagina">
+        <div class="integrantes-utn">
+            <div class="integrantes">
+                <ul class="lista-integrantes">
+                    <li><a href="https://github.com/juanlantermo" target="_blank" title="ir al GitHub">Juan Manuel Lantermo</a></li>
+                    <li><a href="https://github.com/mattigomez" target="_blank" title="ir al GitHub">Matías Gomez</a></li>
+                </ul>
+            </div>
+            <div class="pie-informacion">
+              <img src="../images/utn-logo.png" class="utn-logo" alt="utn-logo">
+              <p>Universidad Tecnológica Nacional</p>
+            </div>
+        </div>
+        <div class="recursos">
+            <p>&copy; 2024 Cotizaciones: <a href="https://dolarapi.com/docs/argentina/" target="_blank" title="Ir a web">dolarapi.com/docs/argentina/</a></p>
+        </div>
+    </footer>
+    <script src="https://kit.fontawesome.com/c28b568b4f.js" crossorigin="anonymous"></script>
+</body>
+<script src="../js/formulario.js"></script>
+</html>
