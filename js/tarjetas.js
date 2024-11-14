@@ -18,7 +18,6 @@ fetch('http://127.0.0.1:5000/cotizaciones')
     for (let i = 1; i < data.length; i++) {
       const dolar = data[i];
       let tarjeta = crearTarjeta(dolar);
-      tarjeta.classList.add('tarjeta-otra');
       const contenedorTarjetas = document.getElementById('contenedor-tarjetas-otras');
       contenedorTarjetas.appendChild(tarjeta);
     }
